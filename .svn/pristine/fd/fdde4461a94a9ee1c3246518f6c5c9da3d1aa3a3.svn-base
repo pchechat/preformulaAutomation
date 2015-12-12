@@ -1,0 +1,162 @@
+package pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+
+import utils.AbstractContainer;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class CheckoutBillingPaymentPage extends AbstractContainer {
+
+	PaymentDetailPage payment = new PaymentDetailPage();
+	
+	By checkoutPaymentForm = By
+			.cssSelector("[class=\"form checkout-payment\"]");
+	By addNewAddressLink = By
+			.cssSelector("[onclick=\"return addCheckoutAddress('billing');\"]");
+	By checkoutAddressesSet = By.cssSelector("#checkoutAddresses");
+	By checked = By.cssSelector("[checked=\"\"]");
+	By radioBoxPP = By.cssSelector("[value=payment-pp]");
+	By checkOutWithPPBtn = By.cssSelector("[onclick=\"return continueWithPayPal();\"]");
+	By ccRadioBox = By.cssSelector("[name=payment-method]");
+	By creditCardList = By.cssSelector("#creditCardsContainer > li");
+	By ccCVVfld = By.cssSelector("#ccCVV");
+	By continueBtn = By.cssSelector("[onclick=\"return continueWithCC();\"]");
+	By addNewCCBtn = By.cssSelector("a[onclick=\"return newCheckoutCC();\"]");
+	By createCCardBtn = By.cssSelector("[onclick=\"return updateCheckoutCC('create')\"]");
+	By cardTypeSelect = payment.cardTypeSelect;
+	By cardNumberSelect = payment.cardNumberFld;
+	By expMounthSelect = payment.expdateMonthSelect;
+	By expYearSelect = payment.expdateYearSelect;
+	By firstNameFld = payment.firstNameFld;
+	By lastNameFld = payment.lastNameFld;
+	By billingReviewLink = By.cssSelector("li>a[href=\"/checkout/billing.jsp\"]");
+	
+	@Given("^user is on Billing & Payment page$")
+	@Then("^system redirects user to Billing & Payment page$")
+	public void atBillingPaymentPage() {
+		sleepFor(3000);
+		isLoaded();
+	}
+
+	@When("^user clicks 'Add a New Address' link$")
+	public void clickAddNewAddress() {
+		sleepFor(1500);
+		getElement(addNewAddressLink).click();
+	}
+	
+	
+
+	@Then("^new address added to the address list and selected on Billing & Payment page$")
+	public void checkActiveAddress(List<String> data) {
+		Assert.assertTrue(getElement(checked).isDisplayed());
+	}
+
+	@Given("^user clicks 'Add a New Credit Card' button$")
+	public void addNewCreditCart() throws Throwable {
+	    sleepFor(1500);
+	    
+	    try{
+	    	click(addNewCCBtn);
+	    }
+	    catch (NullPointerException e)
+	    {
+	    	
+	    }
+	    
+	    }
+
+	@Given("^user enter credit card data in Credit Card modal$")
+	public void inputCCData(List<String> arg1) throws Throwable {
+		sleepFor(2000);
+		selectVisibleTextBy(cardTypeSelect, arg1.get(0));
+		getElement(cardNumberSelect).sendKeys(arg1.get(1));
+		selectVisibleTextBy(expMounthSelect, arg1.get(2));
+		selectVisibleTextBy(expYearSelect, arg1.get(3));
+		getElement(firstNameFld).sendKeys(arg1.get(4));
+		getElement(lastNameFld).sendKeys(arg1.get(5));
+		if( getElements(ccCVVfld).size() !=0 ){
+			
+			typeText(ccCVVfld, "646");
+		}
+	}	
+	
+	@Then("^credit card \"([^\"]*)\" should be present in Checkout Billing & Payment Page$")
+	public void isPresentCC(String cardName) throws Throwable {
+			sleepFor(2000);
+			boolean cardPresent = false;
+		    List<WebElement> cardItem = getElements(creditCardList);
+		    for (WebElement item : cardItem) {
+		    	if(item.getText().contains(cardName)){
+	
+		    		cardPresent = true;
+		    		
+		    	}
+				
+			}
+		    
+		    Assert.assertTrue(cardPresent, "Card " + cardName + " is absent in credit card list"); 	
+	}
+	
+	
+	@When("^user clicks 'Add Credit Card' button$")
+	public void addCCard() throws Throwable {
+	 
+		 try{
+		    	click(createCCardBtn);
+		    }
+		    catch (NullPointerException e)
+		    {
+		    	
+		    	click(continueBtn);
+                driver.navigate().back();
+		    	//sleepFor(3000);
+		    	//click(billingReviewLink);
+		    	
+		    }
+		    
+		//getElement(createCCardBtn).click();
+	}
+	
+	@When("^user enter CVV/Security Code \"([^\"]*)\"$")
+	public void setCVV(String data) {
+	
+		replaceText(getElement(ccCVVfld), data);
+	
+	}
+
+	@When("^user clicks 'Credit Card' as Payment Method$")
+	public void useCreditCard() {
+	
+		selectRadioBox(getElement(ccRadioBox));
+	
+	}
+	
+	@When("^user clicks 'PayPal' as Payment Method$")
+	public void paymentPayPal() throws Throwable {
+	    getElement(radioBoxPP).click();
+	}
+
+	@When("^user clicks on 'Checkout with PayPal' button$")
+	public void toPayPal() throws Throwable {
+	    getElement(checkOutWithPPBtn).click();
+	}
+
+	@When("^user clicks 'Continue' button on Billing & Payment page$")
+	public void clickContinueBtn() {
+		sleepFor(3000);
+		Assert.assertTrue(elementVisible(getElement(continueBtn)), "Element cannot be found"); 
+		getElement(continueBtn).click();
+	}
+
+	@Override
+	protected By getUniqueElement() {
+		return checkoutPaymentForm;
+	}
+
+}

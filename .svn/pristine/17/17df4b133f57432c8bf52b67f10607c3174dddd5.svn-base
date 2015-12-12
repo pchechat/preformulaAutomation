@@ -1,0 +1,51 @@
+package pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+
+import utils.AbstractContainer;
+import cucumber.api.PendingException;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class PayPalPage extends AbstractContainer{
+
+	By emailFldPP = By.cssSelector("#login_email");
+	By passFldPP = By.cssSelector("#login_password");
+	By loginBtnPP = By.cssSelector("#submitLogin");
+	By contunueBtnPP = By.cssSelector("#continue");
+	
+	@When("^user login into PayPal$")
+	public void user_login_into_PayPal(List<String> credentials) throws Throwable {
+		sleepFor(1500);
+		getElement(emailFldPP).clear();
+		getElement(emailFldPP).sendKeys(credentials.get(0));
+	    getElement(passFldPP).sendKeys(credentials.get(1));
+	    
+	}
+
+	
+	@When("^user clicks on 'Log in' button$")
+	public void user_clicks_on_Log_in_button() throws Throwable {
+	    getElement(loginBtnPP).click();
+	}
+
+	@When("^user clicks on 'Continue' button$")
+	public void user_clicks_on_Continue_button() throws Throwable {
+	    getElement(contunueBtnPP).click();
+	}
+
+	@Then("^user clicks on 'Submit my order' button$")
+	public void user_clicks_on_Submit_my_order_button() throws Throwable {
+	    // Express the Regexp above with the code you wish you had
+	    throw new PendingException();
+	}
+
+	
+	@Override
+	protected By getUniqueElement() {
+		return null;
+	}
+
+}

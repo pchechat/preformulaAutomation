@@ -1,0 +1,100 @@
+Feature: Catalog and Product Detail Page test set
+
+  Scenario: We need to make sure that user can navigate to search results page
+    Given user is on Home page
+    And user is not logged in
+    When user enters "Capsules" in search field
+    And select "Vegetarian Capsules" category from popular search results
+    Then system redirects user search results page
+
+  Scenario: We need to make sure that user can navigate to Product Detail Page
+    Given user is on Home page
+    And user enters "Capsules" in search field
+    And select "Vegetarian Capsules" category from popular search results
+    When user opens first available product
+    Then system redirects user to Product Detail Page
+
+  Scenario: We need to make sure that user can not compare 1 product
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user clicks 'Compare' button for first 1 products
+    When user clicks 'Compare Now' button
+    Then system displays error message "You should select at least 2 items to compare. Please try again."
+
+  Scenario: We need to make sure that user can add 2 product to comparison
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user clicks 'Compare' button for first 2 products
+    When user clicks 'Compare Now' button
+    Then system redirects user to Compare Product page
+
+  Scenario: We need to make sure that user can add 4 product to comparison
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user clicks 'Compare' button for first 4 products
+    When user clicks 'Compare Now' button
+    Then system redirects user to Compare Product page
+
+  Scenario: We need to make sure that user can delete product from comparison on Product Listing Page
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user clicks 'Compare' button for first 4 products
+    When user clicks button 'X' to delete first 2 product from comparison
+    Then 2 product remane for compare
+
+  Scenario: We need to make sure that user can not add 7 product to comparison
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    When user clicks 'Compare' button for first 7 products
+    Then system displays error message "You have a maximum of 6 items you can compare at one time."
+
+  Scenario: We need to make sure that user can add product (in stock) to cart from comparison page
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user clicks 'Compare' button for first 2 products
+    And user clicks 'Compare Now' button
+    And system redirects user to Compare Product page
+    When user clicks 'Add to cart' button on Compare Product Page
+    Then system displays confirmation message "1 item added to Cart"
+
+  Scenario: We need to make sure that user can sort product list by brand,price,ratings,product name
+    Given user is on Home page
+    And user enters "Capsules" in search field
+    And select "Vegetarian Capsules" category from popular search results
+    When user select "Name (A-Z)" category from 'Sort By' dropdown
+    Then system refreshes page & sorts product list by selected sorting criterion in ascending order (A-Z)
+
+  Scenario: We need to make sure that user can navigate through product list via pagination
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    And user navigate to "3" page from pegination area
+    When user clicks on '<' link
+    Then system redirect user to "2" page
+
+  Scenario: We need to make sure that user can use breadcrumbs for navigation
+    Given user is on Home page
+    And user enters "Omega-3 Pet - Unflavored - 180 Soft Gels" in search field
+    And select "Omega-3 Pet - Unflavored - 180 Soft Gels" category from search results
+    When user clicks on element Home in breadcrumbs trail
+    Then system redirects user on Home page
+
+  Scenario: We need to make sure that user can view popular searches & suggested items in type-ahead drop down
+    Given user is on Home page
+    When user enters "C" in search field
+    Then system displays search result drop down with '3' popular result search
+    And suggested Items up to '5' most relevant products
+
+  Scenario: We need to make sure that user can filter product list by brand,price,ratings,product name
+    Given user is on Home page
+    And user enters "Capsules" in search field
+    And select "Vegetarian Capsules" category from popular search results
+    When user choose brand "21st Century" in brand facet group
+    Then system displays "21st Century" brand facet value in the selected facets section
+    When user opens first available product
+    Then product overview area contain brand name "21st Century" on product detail page
+
+   Scenario: We need to make sure that user can browse Quick View Modal
+    Given user is on Home page
+    And user select 'Chelated Minerals' category from 'Shop By Category' dropdown
+    When user clicks 'Quick View' button for first available product in list on Product Listing page
+    Then system displays Quick View Modal

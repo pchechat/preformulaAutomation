@@ -1,0 +1,40 @@
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriverException;
+
+import utils.AbstractContainer;
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+
+public class ReportExtender extends AbstractContainer{
+	private Scenario scenario;
+
+	@Before
+	public void before(Scenario scenario) {
+		this.scenario = scenario;
+	}
+
+	@After
+	public void after() {
+		if (scenario.isFailed()) {
+			try {
+				byte[] screenshot = ((TakesScreenshot) driver)
+						.getScreenshotAs(OutputType.BYTES);
+				scenario.embed(screenshot, "image/png");
+			} catch (WebDriverException somePlatformsDontSupportScreenshots) {
+				System.err.println(somePlatformsDontSupportScreenshots
+						.getMessage());
+			}
+		}
+	}
+
+	@Override
+	protected By getUniqueElement() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
